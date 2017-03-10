@@ -1,0 +1,23 @@
+extern crate android_glue;
+extern crate glutin;
+
+
+fn main() {
+    println!("Hello, world!");
+
+    let mut window = glutin::WindowBuilder::new().build().unwrap();
+
+    window.set_title("Rust on Android");
+
+    unsafe { window.make_current() };
+
+    for event in window.wait_events() {
+
+        match event {
+            glutin::Event::Closed => break,
+            _ => (),
+        }
+    }
+
+
+}

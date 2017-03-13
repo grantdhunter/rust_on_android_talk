@@ -1,9 +1,0 @@
-[package]
-name = "android_rust_talk"
-version = "0.1.0"
-authors = ["Grant Hunter <gr@nt-hunter.ca>"]
-
-[dependencies]
-android_glue = "0.2.2"
-gl = "*"
-libc = "*"

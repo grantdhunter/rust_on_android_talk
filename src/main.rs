@@ -1,26 +1,28 @@
 extern crate android_glue;
-extern crate glutin;
+
+
+use android_glue::{write_log, Event, add_sender};
+
+use std::sync::mpsc::{Sender, Receiver};
+use std::sync::mpsc;
+use std::thread;
 
 
 fn main() {
-    android_glue::write_log("Hello, world!");
+    write_log("Hello, world!");
 
-    let mut window = glutin::WindowBuilder::new().build().unwrap();
+    let (sender, receiver) : (Sender<Event>, Receiver<Event>) = mpsc::channel();
 
-    window.set_title("Rust on Android");
+    add_sender(sender);
 
-    unsafe { window.make_current() };
+    thread::spawn(move || {
 
-    println!("Pixel format of the window: {:?}", window.get_pixel_format());
-    
-    for event in window.wait_events() {
-
-        android_glue::write_log(&format!("{:?}", event));
-        match event {
-            glutin::Event::Closed => break,
-            _ => (),
+        loop{
+            let event = receiver.recv();
+            println!("Event: {:?}", event);
         }
-    }
+        
+    });
 
 
 }

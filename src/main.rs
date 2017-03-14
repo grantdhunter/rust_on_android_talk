@@ -3,11 +3,11 @@ extern crate gl;
 extern crate glutin;
 extern crate libc;
 
-use android_glue::Event;
+use android_glue::{Event, MotionAction};
 
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::mpsc;
-use std::thread;
+use std::{thread, time};
 
 fn do_ui() {
     let window = glutin::WindowBuilder::new()
@@ -18,18 +18,16 @@ fn do_ui() {
     unsafe {
         window.make_current();
         gl::load_with(|symbol| window.get_proc_address(symbol) as *const _);
-        gl::ClearColor(0.0, 1.0, 0.0, 1.0);
+        gl::ClearColor(1.0, 0.0, 0.0, 1.0);
     }
 
-    for event in window.wait_events() {
+
+    loop {
         unsafe { gl::Clear(gl::COLOR_BUFFER_BIT) };
-         window.swap_buffers();
-
-        match event {
-            glutin::Event::Closed => break,
-            _ => ()
-        }
+        window.swap_buffers();
+        thread::sleep(time::Duration::from_millis(10));
     }
+
 
 }
 
@@ -63,7 +61,14 @@ fn main() {
             Event::TermWindow => {
                 println!("Window terminated");
             }
-
+            Event::EventMotion(motion) => {
+                match motion.action {
+                    MotionAction::Up =>  {
+                        
+                    },
+                    _ => {}
+                }
+            }
             _ => {}
         }
 
